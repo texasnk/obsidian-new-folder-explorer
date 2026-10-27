@@ -1,0 +1,942 @@
+.theme-light .folder-explorer {
+  --background: #f8f9f6;
+  --surface: #ffffff;
+  --surface-elevated: #ebe9e4;
+  --surface-hover: #f1f3ef;
+  --foreground: #171716;
+  --foreground-muted: #6b706d;
+  --border: #e2e7e3;
+  --brand: #2fa080;
+  --primary: #027f62;
+  --primary-hover: #02654d;
+  --primary-soft: #ebfbf5;
+  --success: #027f62;
+  --danger: #c65f62;
+  --warning: #a87322;
+  --info: #497ac6;
+}
+.theme-dark .folder-explorer {
+  --background: #121715;
+  --surface: #1c2420;
+  --surface-elevated: #25302a;
+  --surface-hover: #303d35;
+  --foreground: #f2f7f3;
+  --foreground-muted: #aab7b0;
+  --border: #36433b;
+  --brand: #2fa080;
+  --primary: #57c4a1;
+  --primary-hover: #78d4b5;
+  --primary-soft: #183c30;
+  --success: #57c4a1;
+  --danger: #f0878e;
+  --warning: #e5b567;
+  --info: #8bb7ff;
+}
+.folder-explorer {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --pointer-x: 50vw;
+  --pointer-y: 50vh;
+  position: relative;
+  min-width: 0;
+  overflow-y: auto;
+  isolation: isolate;
+  color: var(--foreground);
+  background: var(--background);
+}
+.folder-explorer__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1440px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+.folder-explorer__ambient-background {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(
+    34rem circle at var(--pointer-x) var(--pointer-y),
+    color-mix(in srgb, var(--primary) 7%, transparent),
+    transparent 72%
+  );
+}
+.theme-dark .folder-explorer__ambient-background {
+  background: radial-gradient(
+    36rem circle at var(--pointer-x) var(--pointer-y),
+    color-mix(in srgb, var(--primary) 12%, transparent),
+    transparent 72%
+  );
+}
+.folder-explorer__particle {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--brand) 32%, transparent);
+  opacity: 0.45;
+  transform: translate3d(0, 0, 0);
+  animation: folder-explorer-drift var(--drift-duration) ease-in-out infinite;
+  animation-play-state: running;
+  will-change: transform;
+}
+.theme-dark .folder-explorer__particle {
+  background: color-mix(in srgb, var(--brand) 48%, transparent);
+  opacity: 0.6;
+}
+.folder-explorer__particle--small {
+  width: 4px;
+  height: 4px;
+}
+.folder-explorer__particle--medium {
+  width: 7px;
+  height: 7px;
+}
+.folder-explorer__particle--large {
+  width: 11px;
+  height: 11px;
+  opacity: 0.28;
+}
+.folder-explorer__particle--1 {
+  top: 14%;
+  left: 11%;
+  --drift-duration: 31s;
+  --drift-x: 26px;
+  --drift-y: -18px;
+}
+.folder-explorer__particle--2 {
+  top: 68%;
+  left: 7%;
+  --drift-duration: 27s;
+  --drift-x: -18px;
+  --drift-y: 24px;
+}
+.folder-explorer__particle--3 {
+  top: 32%;
+  left: 84%;
+  --drift-duration: 34s;
+  --drift-x: 18px;
+  --drift-y: 28px;
+}
+.folder-explorer__particle--4 {
+  top: 78%;
+  left: 72%;
+  --drift-duration: 29s;
+  --drift-x: -30px;
+  --drift-y: -16px;
+}
+.folder-explorer__particle--5 {
+  top: 16%;
+  left: 62%;
+  --drift-duration: 33s;
+  --drift-x: 20px;
+  --drift-y: 16px;
+}
+.folder-explorer__particle--6 {
+  top: 48%;
+  left: 91%;
+  --drift-duration: 30s;
+  --drift-x: -22px;
+  --drift-y: -26px;
+}
+.folder-explorer__particle--7 {
+  top: 88%;
+  left: 42%;
+  --drift-duration: 35s;
+  --drift-x: 28px;
+  --drift-y: -14px;
+}
+@keyframes folder-explorer-drift {
+  50% {
+    transform: translate3d(
+      calc(var(--drift-x) * -0.35),
+      calc(var(--drift-y) * 0.6),
+      0
+    );
+  }
+  to {
+    transform: translate3d(var(--drift-x), var(--drift-y), 0);
+  }
+}
+.folder-explorer__header {
+  display: block;
+  margin-bottom: var(--space-10);
+}
+.folder-explorer__eyebrow {
+  margin-bottom: var(--space-2);
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+.folder-explorer__title {
+  margin: 0 0 var(--space-3);
+  color: var(--foreground);
+  font-size: clamp(28px, 4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.folder-explorer__breadcrumb {
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--foreground-muted);
+  font-size: 13px;
+}
+.folder-explorer__breadcrumb-item {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--space-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-explorer__breadcrumb-item span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.folder-explorer__breadcrumb-item.is-current {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.folder-explorer__breadcrumb-item svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+.folder-explorer__navigation {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: var(--space-3);
+}
+.folder-explorer__breadcrumb-item {
+  border: 0;
+  padding: var(--space-1) var(--space-3);
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+.folder-explorer__breadcrumb-item:hover {
+  color: var(--primary);
+}
+.folder-explorer__separator {
+  color: var(--foreground-muted);
+  opacity: 0.65;
+}
+.folder-explorer__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 40px;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 0;
+  color: var(--foreground-muted);
+  background: var(--surface);
+}
+.folder-explorer__search.is-open {
+  width: min(19rem, 52vw);
+  border-color: var(--border);
+  padding: 0 var(--space-3);
+}
+.folder-explorer__search-toggle,
+.folder-explorer__search-clear {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0;
+  color: var(--foreground-muted);
+  background: transparent;
+  cursor: pointer;
+}
+.folder-explorer__search-toggle {
+  margin-left: var(--space-2);
+}
+.folder-explorer__search-toggle:hover,
+.folder-explorer__search-clear:hover {
+  color: var(--primary);
+  background: var(--surface-hover);
+}
+.folder-explorer__search-toggle svg,
+.folder-explorer__search-clear svg {
+  width: 17px;
+  height: 17px;
+}
+.folder-explorer__search:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+.folder-explorer__search svg {
+  width: 16px;
+  height: 16px;
+}
+.folder-explorer__search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: var(--foreground);
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+}
+.folder-explorer__search input::placeholder {
+  color: var(--foreground-muted);
+}
+.folder-explorer__folders,
+.folder-explorer__notes {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  background: var(--surface-elevated);
+}
+.folder-explorer__notes {
+  margin-top: var(--space-6);
+}
+.folder-explorer__images {
+  margin-top: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  overflow: hidden;
+  background: var(--surface-elevated);
+}
+.folder-explorer__image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 148px), 1fr));
+  gap: var(--space-3);
+}
+.folder-explorer__image-card {
+  display: grid;
+  min-width: 0;
+  min-height: 212px;
+  gap: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  overflow: hidden;
+  color: var(--foreground);
+  background: var(--surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+}
+.folder-explorer__image-card:hover {
+  border-color: var(--primary);
+  background: var(--surface-hover);
+}
+.folder-explorer__image-card img {
+  width: 100%;
+  height: 168px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  object-fit: cover;
+  background: var(--primary-soft);
+}
+.folder-explorer__image-card span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-explorer__section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+.folder-explorer__section-header h2 {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 18px;
+  font-weight: 600;
+}
+.folder-explorer__section-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+.folder-explorer__section-action {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  color: var(--foreground-muted);
+  background: var(--surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+.folder-explorer__section-action:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--surface-hover);
+}
+.folder-explorer__section-action.is-danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.folder-explorer__section-action.is-danger {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  padding: 0;
+}
+.folder-explorer__section-action.is-danger svg {
+  width: 15px;
+  height: 15px;
+}
+.folder-explorer__section-icon {
+  display: inline-flex;
+  color: var(--primary);
+}
+.folder-explorer__section-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.folder-explorer__count {
+  border-radius: 999px;
+  padding: 2px var(--space-2);
+  color: var(--foreground-muted);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+}
+.folder-explorer__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: var(--space-4);
+}
+.folder-explorer__folder-card {
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 158px;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+  color: var(--foreground);
+  background: var(--item-background, var(--surface));
+  text-align: left;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+}
+.folder-explorer__folder-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.folder-explorer__folder-card-open {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 156px;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 0;
+  padding: var(--space-5);
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.folder-explorer__folder-card.is-custom-background,
+.folder-explorer__folder-card.is-custom-background:hover,
+.folder-explorer__note.is-custom-background,
+.folder-explorer__note.is-custom-background:hover {
+  background-color: var(--item-background) !important;
+}
+.folder-explorer__folder-icon-area {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  margin-bottom: auto;
+  border-radius: var(--radius-md);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+.folder-explorer__folder-icon {
+  display: inline-flex;
+}
+.folder-explorer__folder-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.folder-explorer__folder-name {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-explorer__folder-meta {
+  margin-top: var(--space-1);
+  color: var(--foreground-muted);
+  font-size: 12px;
+}
+.folder-explorer__notes-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.folder-explorer__note {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-4);
+  color: var(--foreground);
+  background: var(--item-background, var(--surface));
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+.folder-explorer__notes-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.folder-explorer__note-selection {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  accent-color: var(--primary);
+}
+.folder-explorer__note {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.folder-explorer__item-menu {
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  padding: 0;
+  color: var(--foreground-muted);
+  background: transparent !important;
+  cursor: pointer;
+  appearance: none;
+}
+.folder-explorer__folder-card > .folder-explorer__item-menu {
+  position: absolute;
+  z-index: 3;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+.folder-explorer__item-menu:hover {
+  border-color: var(--border);
+  color: var(--primary);
+  background: transparent !important;
+}
+.folder-explorer__item-menu svg {
+  width: 17px;
+  height: 17px;
+}
+.folder-explorer__note:hover {
+  border-color: var(--primary);
+}
+.folder-explorer__note-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--foreground-muted);
+}
+.folder-explorer__note-icon svg {
+  width: 17px;
+  height: 17px;
+}
+.folder-explorer__note-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-explorer__empty {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  color: var(--foreground-muted);
+  background: var(--surface);
+  font-size: 12px;
+  text-align: center;
+}
+.folder-explorer__folder-card:focus-visible,
+.folder-explorer__folder-card-open:focus-visible,
+.folder-explorer__breadcrumb-item:focus-visible,
+.folder-explorer__note:focus-visible,
+.folder-explorer__item-menu:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .folder-explorer__content {
+    padding: var(--space-6);
+  }
+  .folder-explorer__header {
+    margin-bottom: var(--space-8);
+  }
+  .folder-explorer__breadcrumb-item:not(.is-current):not(:first-child),
+  .folder-explorer__separator:not(:last-of-type) {
+    display: none;
+  }
+  .folder-explorer__folders,
+  .folder-explorer__notes {
+    padding: var(--space-4);
+  }
+}
+
+.folder-explorer-modal {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-10);
+}
+.folder-explorer-modal__section {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+.folder-explorer-modal__section h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.folder-explorer-modal__preview {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: var(--radius-md);
+  color: var(--primary);
+  background: var(--primary-soft);
+  font-size: 20px;
+}
+.folder-explorer-modal__preview svg {
+  width: 22px;
+  height: 22px;
+}
+.folder-explorer-modal__icons,
+.folder-explorer-modal__colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.folder-explorer-modal__icons button,
+.folder-explorer-modal__colors button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.folder-explorer-modal__icons button:hover,
+.folder-explorer-modal__colors button:hover {
+  border-color: var(--interactive-accent);
+}
+.folder-explorer-modal__icons svg {
+  width: 17px;
+  height: 17px;
+}
+.folder-explorer-modal__input {
+  width: 100%;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  background: var(--background-primary);
+}
+.folder-explorer-modal__picker {
+  width: 42px;
+  height: 32px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.folder-explorer-modal__color-preview {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  color: var(--text-normal);
+  background: var(--background-primary);
+  font-size: 12px;
+}
+.folder-explorer-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--background-modifier-border);
+  padding-top: var(--space-6);
+}
+
+.folder-explorer-note-metadata-panel {
+  box-sizing: border-box;
+  width: 100%;
+}
+.folder-explorer-note-ambient-host {
+  position: relative;
+  isolation: isolate;
+}
+.theme-light .folder-explorer-note-ambient {
+  --note-ambient-color: 2 127 98;
+}
+.theme-dark .folder-explorer-note-ambient {
+  --note-ambient-color: 87 196 161;
+}
+.folder-explorer-note-ambient {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    34rem circle at 52% 24%,
+    rgb(var(--note-ambient-color) / 0.07),
+    transparent 72%
+  );
+  transition: opacity 180ms ease;
+}
+.theme-dark .folder-explorer-note-ambient {
+  background: radial-gradient(
+    36rem circle at 52% 24%,
+    rgb(var(--note-ambient-color) / 0.13),
+    transparent 72%
+  );
+}
+.folder-explorer-note-ambient::before,
+.folder-explorer-note-ambient::after {
+  position: absolute;
+  inset: -4%;
+  content: '';
+  background-image:
+    radial-gradient(
+      circle 3px at 12% 16%,
+      rgb(var(--note-ambient-color) / 0.32) 0 98%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 5px at 78% 20%,
+      rgb(var(--note-ambient-color) / 0.25) 0 98%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2px at 88% 70%,
+      rgb(var(--note-ambient-color) / 0.35) 0 98%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 4px at 28% 82%,
+      rgb(var(--note-ambient-color) / 0.22) 0 98%,
+      transparent 100%
+    );
+  opacity: 0.5;
+  animation: folder-explorer-note-ambient-drift 31s ease-in-out infinite;
+  will-change: transform;
+}
+.theme-dark .folder-explorer-note-ambient::before,
+.theme-dark .folder-explorer-note-ambient::after {
+  opacity: 0.72;
+}
+.folder-explorer-note-ambient::after {
+  inset: -7%;
+  opacity: 0.32;
+  animation-duration: 27s;
+  animation-direction: reverse;
+}
+.folder-explorer-note-ambient.is-visible {
+  opacity: 1;
+}
+@keyframes folder-explorer-note-ambient-drift {
+  50% {
+    transform: translate3d(14px, -10px, 0);
+  }
+  to {
+    transform: translate3d(-8px, 12px, 0);
+  }
+}
+.cm-panel.folder-explorer-note-metadata-panel {
+  padding: 0 var(--file-margins, 32px);
+}
+.folder-explorer-note-metadata {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--size-4-2, 16px);
+  margin: 0 0 4px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding: 0 0 4px;
+}
+.folder-explorer-note-metadata__breadcrumb {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--size-2-2, 8px);
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.folder-explorer-note-metadata__link {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--size-1-1, 4px);
+  border: 0;
+  padding: 0 var(--size-2-1, 6px);
+  overflow: hidden;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-explorer-note-metadata__link:hover {
+  color: var(--interactive-accent);
+}
+.folder-explorer-note-metadata__link:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 3px;
+}
+.folder-explorer-note-metadata__link svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+.folder-explorer-note-metadata__link span,
+.folder-explorer-note-metadata__current {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.folder-explorer-note-metadata__current {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: var(--text-normal);
+  font-weight: 600;
+}
+.folder-explorer-note-metadata__separator {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+}
+.folder-explorer-note-metadata__date {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.folder-explorer-note-metadata__dates {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--size-2-1, 6px);
+}
+.folder-explorer-note-metadata__ambient-toggle {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+}
+.folder-explorer-note-metadata__ambient-toggle:hover {
+  color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+}
+.folder-explorer-note-metadata__ambient-toggle:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 3px;
+}
+.folder-explorer-note-metadata__ambient-toggle svg {
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 600px) {
+  .cm-panel.folder-explorer-note-metadata-panel {
+    padding: 0 var(--size-4-4, 16px);
+  }
+  .folder-explorer-note-metadata__breadcrumb
+    .folder-explorer-note-metadata__link:not(:first-child) {
+    display: none;
+  }
+  .folder-explorer-note-metadata {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--size-2-2, 8px);
+  }
+  .folder-explorer-note-metadata__dates {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--size-1-1, 4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folder-explorer__particle {
+    animation: none;
+  }
+  .folder-explorer-note-ambient::before,
+  .folder-explorer-note-ambient::after {
+    animation: none;
+  }
+  .folder-explorer *,
+  .folder-explorer *::before,
+  .folder-explorer *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
