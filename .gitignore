@@ -1,0 +1,17 @@
+node_modules/
+main.js
+data.json
+coverage/
+.env
+.env.*
+!.env.example
+.obsidian/
+obsidian-excalidraw-plugin/data.json
+*.log
+.eslintcache
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+*.p12
+*.pfx
