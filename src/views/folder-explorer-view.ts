@@ -243,6 +243,14 @@ export class FolderExplorerView extends ItemView {
         .setIcon('palette')
         .onClick(() => this.openAppearanceModal(entry)),
     );
+    if (entry.kind === 'folder') {
+      menu.addItem((item) =>
+        item
+          .setTitle('Editar descrição')
+          .setIcon('align-left')
+          .onClick(() => this.openAppearanceModal(entry)),
+      );
+    }
     menu.addItem((item) =>
       item
         .setTitle('Restaurar aparência padrão')
@@ -441,6 +449,7 @@ export class FolderExplorerView extends ItemView {
       this.app,
       entry.name,
       this.appearances.get(entry.path),
+      entry.kind === 'folder',
       (appearance) => this.updateAppearance(entry.path, appearance),
       () => this.resetAppearance(entry.path),
     ).open();

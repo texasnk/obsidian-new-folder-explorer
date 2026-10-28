@@ -33,11 +33,23 @@ export function renderFolderGrid(
     if (appearance?.backgroundColor) {
       card.addClass('is-custom-background');
       card.style.setProperty('--item-background', appearance.backgroundColor);
+      card.style.setProperty(
+        'background-color',
+        appearance.backgroundColor,
+        'important',
+      );
     }
     const openButton = card.createEl('button', {
       cls: 'folder-explorer__folder-card-open',
       attr: { 'aria-label': `Open folder ${folder.name}` },
     });
+    if (appearance?.backgroundColor) {
+      openButton.style.setProperty(
+        'background-color',
+        appearance.backgroundColor,
+        'important',
+      );
+    }
     const iconArea = openButton.createDiv({
       cls: 'folder-explorer__folder-icon-area',
     });
@@ -46,6 +58,12 @@ export function renderFolderGrid(
       text: folder.name,
       cls: 'folder-explorer__folder-name',
     });
+    if (appearance?.description) {
+      openButton.createSpan({
+        text: appearance.description,
+        cls: 'folder-explorer__folder-description',
+      });
+    }
     openButton.createSpan({
       text: formatItemCount(getItemCount(folder.path)),
       cls: 'folder-explorer__folder-meta',

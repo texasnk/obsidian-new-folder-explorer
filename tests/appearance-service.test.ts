@@ -2,19 +2,21 @@ import { describe, expect, it } from 'vitest';
 import { AppearanceService } from '../src/services/appearance-service';
 
 describe('AppearanceService', () => {
-  it('persists valid icon and background preferences', () => {
+  it('persists valid icon, background, and description preferences', () => {
     const service = new AppearanceService();
     expect(
       service.update('Study/note.md', {
         icon: 'book-open',
         iconType: 'lucide',
         backgroundColor: '#D9F3E8',
+        description: 'Course material and study notes.',
       }),
     ).toBe(true);
     expect(service.toSettings().appearances['Study/note.md']).toEqual({
       icon: 'book-open',
       iconType: 'lucide',
       backgroundColor: '#D9F3E8',
+      description: 'Course material and study notes.',
     });
   });
 
@@ -29,6 +31,35 @@ describe('AppearanceService', () => {
       },
     });
     expect(service.toSettings().appearances).toEqual({});
+  });
+
+  it('rejects empty and overly long descriptions', () => {
+    const service = new AppearanceService({
+      appearances: {
+        empty: { description: '   ' },
+        long: { description: 'a'.repeat(501) },
+      },
+    });
+    expect(service.toSettings().appearances).toEqual({});
+  });
+
+  it('clears only the custom background color', () => {
+    const service = new AppearanceService({
+      appearances: {
+        Study: {
+          icon: 'book-open',
+          iconType: 'lucide',
+          backgroundColor: '#D9F3E8',
+          description: 'Course material.',
+        },
+      },
+    });
+    service.update('Study', { backgroundColor: undefined });
+    expect(service.get('Study')).toEqual({
+      icon: 'book-open',
+      iconType: 'lucide',
+      description: 'Course material.',
+    });
   });
 
   it('migrates customizations for a renamed folder and all descendants', () => {

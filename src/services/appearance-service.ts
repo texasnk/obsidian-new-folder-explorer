@@ -4,6 +4,7 @@ export interface ItemAppearance {
   icon?: string;
   iconType?: IconType;
   backgroundColor?: string;
+  description?: string;
 }
 
 export interface FolderExplorerSettings {
@@ -25,8 +26,14 @@ export class AppearanceService {
 
   public update(path: string, appearance: ItemAppearance): boolean {
     const sanitized = sanitizeAppearance(appearance);
-    if (!sanitized) return false;
-    this.appearances[path] = { ...this.appearances[path], ...sanitized };
+    const clearsBackgroundColor =
+      'backgroundColor' in appearance && appearance.backgroundColor === undefined;
+    if (!sanitized && !clearsBackgroundColor) return false;
+
+    const updated = { ...this.appearances[path], ...sanitized };
+    if (clearsBackgroundColor) delete updated.backgroundColor;
+    if (Object.keys(updated).length) this.appearances[path] = updated;
+    else delete this.appearances[path];
     return true;
   }
 
@@ -81,6 +88,9 @@ function sanitizeAppearance(value: unknown): ItemAppearance | undefined {
   if (isValidColor(appearance.backgroundColor)) {
     sanitized.backgroundColor = appearance.backgroundColor;
   }
+  if (isValidDescription(appearance.description)) {
+    sanitized.description = appearance.description.trim();
+  }
   return Object.keys(sanitized).length ? sanitized : undefined;
 }
 
@@ -94,4 +104,12 @@ function isValidIcon(icon: unknown, type: unknown): icon is string {
 
 function isValidColor(color: unknown): color is string {
   return typeof color === 'string' && /^#[0-9a-fA-F]{6}$/.test(color);
+}
+
+function isValidDescription(description: unknown): description is string {
+  return (
+    typeof description === 'string' &&
+    Boolean(description.trim()) &&
+    description.trim().length <= 500
+  );
 }

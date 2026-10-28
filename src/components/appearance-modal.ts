@@ -29,11 +29,13 @@ export class AppearanceModal extends Modal {
   private icon = '';
   private iconType: ItemAppearance['iconType'];
   private color = '';
+  private description = '';
 
   public constructor(
     app: Modal['app'],
     private readonly itemName: string,
     appearance: ItemAppearance | undefined,
+    private readonly supportsDescription: boolean,
     private readonly onApply: (appearance: ItemAppearance) => void,
     private readonly onReset: () => void,
   ) {
@@ -41,6 +43,7 @@ export class AppearanceModal extends Modal {
     this.icon = appearance?.icon ?? '';
     this.iconType = appearance?.iconType;
     this.color = appearance?.backgroundColor ?? '';
+    this.description = appearance?.description ?? '';
   }
 
   public onOpen(): void {
@@ -49,6 +52,7 @@ export class AppearanceModal extends Modal {
     this.titleEl.setText(`Personalizar ${this.itemName}`);
     this.renderIconControls();
     this.renderColorControls();
+    if (this.supportsDescription) this.renderDescriptionControls();
     this.renderActions();
   }
 
@@ -97,24 +101,10 @@ export class AppearanceModal extends Modal {
     });
     this.renderColorPreview(preview);
     const choices = section.createDiv({ cls: 'folder-explorer-modal__colors' });
-    COLORS.forEach((color) => {
-      const button = choices.createEl('button', {
-        attr: { type: 'button', 'aria-label': `Usar ${color}` },
-      });
-      button.style.backgroundColor = color;
-      button.addEventListener('click', () => {
-        this.color = color;
-        this.renderColorPreview(preview);
-      });
-    });
     const picker = section.createEl('input', {
       type: 'color',
       value: this.color || '#D9F3E8',
       cls: 'folder-explorer-modal__picker',
-    });
-    picker.addEventListener('input', () => {
-      this.color = picker.value.toUpperCase();
-      this.renderColorPreview(preview);
     });
     const hex = section.createEl('input', {
       type: 'text',
@@ -122,9 +112,43 @@ export class AppearanceModal extends Modal {
       placeholder: '#RRGGBB',
       cls: 'folder-explorer-modal__input',
     });
-    hex.addEventListener('input', () => {
-      this.color = hex.value.trim();
+    const setColor = (color: string): void => {
+      this.color = color.trim().toUpperCase();
+      if (/^#[0-9A-F]{6}$/.test(this.color)) picker.value = this.color;
+      hex.value = this.color;
       this.renderColorPreview(preview);
+    };
+    COLORS.forEach((color) => {
+      const button = choices.createEl('button', {
+        attr: { type: 'button', 'aria-label': `Usar ${color}` },
+      });
+      button.style.backgroundColor = color;
+      button.addEventListener('click', () => setColor(color));
+    });
+    const defaultColor = choices.createEl('button', {
+      text: 'Usar fundo padrão',
+      cls: 'folder-explorer-modal__default-color',
+      attr: { type: 'button' },
+    });
+    defaultColor.addEventListener('click', () => setColor(''));
+    picker.addEventListener('input', () => setColor(picker.value));
+    picker.addEventListener('change', () => setColor(picker.value));
+    hex.addEventListener('input', () => setColor(hex.value));
+  }
+
+  private renderDescriptionControls(): void {
+    const section = this.contentEl.createDiv({
+      cls: 'folder-explorer-modal__section',
+    });
+    section.createEl('h3', { text: 'Descrição' });
+    const input = section.createEl('textarea', {
+      value: this.description,
+      placeholder: 'Adicione uma descrição para esta pasta',
+      cls: 'folder-explorer-modal__input folder-explorer-modal__textarea',
+      attr: { maxlength: '500' },
+    });
+    input.addEventListener('input', () => {
+      this.description = input.value;
     });
   }
 
@@ -146,6 +170,9 @@ export class AppearanceModal extends Modal {
         icon: this.icon || undefined,
         iconType: this.icon ? this.iconType : undefined,
         backgroundColor: this.color || undefined,
+        description: this.supportsDescription
+          ? this.description.trim() || undefined
+          : undefined,
       });
       this.close();
     });

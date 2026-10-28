@@ -436,7 +436,8 @@
   position: relative;
   box-sizing: border-box;
   min-width: 0;
-  min-height: 158px;
+  height: 224px;
+  min-height: 224px;
   flex-direction: column;
   align-items: flex-start;
   border: 1px solid var(--border);
@@ -460,7 +461,7 @@
   z-index: 1;
   box-sizing: border-box;
   width: 100%;
-  min-height: 156px;
+  min-height: 222px;
   flex: 1 1 auto;
   flex-direction: column;
   align-items: flex-start;
@@ -504,6 +505,20 @@
   line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.folder-explorer__folder-description {
+  display: -webkit-box;
+  width: 100%;
+  margin-top: var(--space-2);
+  overflow: hidden;
+  color: var(--foreground-muted);
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 .folder-explorer__folder-meta {
   margin-top: var(--space-1);
@@ -681,6 +696,13 @@
 .folder-explorer-modal__colors button:hover {
   border-color: var(--interactive-accent);
 }
+.folder-explorer-modal__colors .folder-explorer-modal__default-color {
+  width: auto;
+  padding: 0 var(--space-3);
+  color: var(--text-muted);
+  background: var(--background-primary);
+  font-size: 12px;
+}
 .folder-explorer-modal__icons svg {
   width: 17px;
   height: 17px;
@@ -691,6 +713,10 @@
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
   background: var(--background-primary);
+}
+.folder-explorer-modal__textarea {
+  min-height: 76px;
+  resize: vertical;
 }
 .folder-explorer-modal__picker {
   width: 42px;
@@ -882,6 +908,13 @@
   align-items: center;
   gap: var(--size-2-1, 6px);
 }
+.folder-explorer-note-metadata__controls {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--size-1-1, 4px);
+}
+.folder-explorer-note-metadata__copy,
 .folder-explorer-note-metadata__ambient-toggle {
   display: inline-grid;
   width: 24px;
@@ -895,14 +928,17 @@
   background: transparent;
   cursor: pointer;
 }
+.folder-explorer-note-metadata__copy:hover,
 .folder-explorer-note-metadata__ambient-toggle:hover {
   color: var(--interactive-accent);
   background: var(--background-modifier-hover);
 }
+.folder-explorer-note-metadata__copy:focus-visible,
 .folder-explorer-note-metadata__ambient-toggle:focus-visible {
   outline: 2px solid var(--interactive-accent);
   outline-offset: 3px;
 }
+.folder-explorer-note-metadata__copy svg,
 .folder-explorer-note-metadata__ambient-toggle svg {
   width: 14px;
   height: 14px;

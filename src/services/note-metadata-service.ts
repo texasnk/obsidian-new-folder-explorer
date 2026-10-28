@@ -1,4 +1,4 @@
-import { setIcon, TFile, type App } from 'obsidian';
+import { Notice, setIcon, TFile, type App } from 'obsidian';
 
 export interface NoteMetadataNavigation {
   openFolder(path: string): Promise<void>;
@@ -68,7 +68,11 @@ export class NoteMetadataHeader implements MetadataHeaderTarget {
       attr: { 'aria-label': 'Caminho da nota' },
     });
     this.renderBreadcrumb(breadcrumb, file);
-    this.renderAmbientToggle(breadcrumb, file.path);
+    const controls = breadcrumb.createDiv({
+      cls: 'folder-explorer-note-metadata__controls',
+    });
+    this.renderCopyButton(controls, file);
+    this.renderAmbientToggle(controls, file.path);
     const dates = this.container.createDiv({
       cls: 'folder-explorer-note-metadata__dates',
     });
@@ -162,6 +166,32 @@ export class NoteMetadataHeader implements MetadataHeaderTarget {
     toggle.addEventListener('click', () =>
       this.navigation.toggleAmbientBackground(filePath),
     );
+  }
+
+  private renderCopyButton(container: HTMLElement, file: TFile): void {
+    const copy = container.createEl('button', {
+      cls: 'folder-explorer-note-metadata__copy',
+      attr: {
+        type: 'button',
+        'aria-label': 'Copiar conteúdo da nota',
+        title: 'Copiar conteúdo da nota',
+      },
+    });
+    setIcon(copy, 'copy');
+    copy.addEventListener('click', () => void this.copyNoteContent(file));
+  }
+
+  private async copyNoteContent(file: TFile): Promise<void> {
+    try {
+      const content = await this.app.vault.read(file);
+      const clipboard = this.container.ownerDocument.defaultView?.navigator
+        .clipboard;
+      if (!clipboard) throw new Error('Clipboard is unavailable');
+      await clipboard.writeText(content);
+      new Notice('Conteúdo da nota copiado.');
+    } catch {
+      new Notice('Não foi possível copiar o conteúdo da nota.');
+    }
   }
 }
 
