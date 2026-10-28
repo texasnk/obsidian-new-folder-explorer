@@ -14,6 +14,8 @@ export function renderNotesList(
   onCreateNote: () => void,
   onCreateDrawing: () => void,
   onDeleteSelected: () => void,
+  isSortDescending: boolean,
+  onToggleSort: () => void,
 ): void {
   const section = container.createEl('section', {
     cls: 'folder-explorer__notes',
@@ -27,6 +29,18 @@ export function renderNotesList(
     cls: 'folder-explorer__count',
   });
   const actions = header.createDiv({ cls: 'folder-explorer__section-actions' });
+  const sortButton = actions.createEl('button', {
+    cls: 'folder-explorer__section-action folder-explorer__sort-action',
+    attr: {
+      type: 'button',
+      'aria-label': isSortDescending
+        ? 'Ordenar de A a Z'
+        : 'Ordenar de Z a A',
+      title: isSortDescending ? 'Ordenar de A a Z' : 'Ordenar de Z a A',
+    },
+  });
+  setIcon(sortButton, 'arrow-up-down');
+  sortButton.addEventListener('click', onToggleSort);
   const createNoteButton = actions.createEl('button', {
     text: 'Nova nota',
     cls: 'folder-explorer__section-action',

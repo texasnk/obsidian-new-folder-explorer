@@ -104,6 +104,21 @@ describe('VaultNavigationService', () => {
     expect(service.getItemCount('Study')).toBe(3);
   });
 
+  it('sorts numbered names in natural order', () => {
+    const numberedService = new VaultNavigationService({
+      getFolder: () => null,
+      getChildren: () => [
+        { path: 'course-10', name: 'course-10', kind: 'folder' },
+        { path: 'course-2', name: 'course-2', kind: 'folder' },
+        { path: 'course-1', name: 'course-1', kind: 'folder' },
+      ],
+    });
+
+    expect(numberedService.getContents('').folders.map(({ name }) => name)).toEqual(
+      ['course-1', 'course-2', 'course-10'],
+    );
+  });
+
   it('separates direct images from notes and folders', () => {
     expect(service.getContents('Study').images).toMatchObject([
       { path: 'Study/cover.webp' },

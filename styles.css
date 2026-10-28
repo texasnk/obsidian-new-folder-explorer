@@ -410,6 +410,17 @@
   width: 15px;
   height: 15px;
 }
+.folder-explorer__sort-action {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  padding: 0;
+}
+.folder-explorer__sort-action svg {
+  width: 15px;
+  height: 15px;
+}
 .folder-explorer__section-icon {
   display: inline-flex;
   color: var(--primary);
@@ -465,6 +476,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-start !important;
   border: 0;
   padding: var(--space-5);
   color: inherit;
@@ -484,7 +496,7 @@
   width: 40px;
   height: 40px;
   place-items: center;
-  margin-bottom: auto;
+  margin-bottom: var(--space-3);
   border-radius: var(--radius-md);
   color: var(--primary);
   background: var(--primary-soft);
@@ -521,7 +533,7 @@
   -webkit-line-clamp: 3;
 }
 .folder-explorer__folder-meta {
-  margin-top: var(--space-1);
+  margin-top: auto;
   color: var(--foreground-muted);
   font-size: 12px;
 }
@@ -554,6 +566,7 @@
 }
 .folder-explorer__notes-list li {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: var(--space-2);
 }
@@ -610,9 +623,11 @@
   height: 17px;
 }
 .folder-explorer__note-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .folder-explorer__empty {
   border: 1px dashed var(--border);
@@ -830,6 +845,9 @@
   }
 }
 .cm-panel.folder-explorer-note-metadata-panel {
+  padding: 0 var(--file-margins, 32px);
+}
+.markdown-preview-view > .folder-explorer-note-metadata-panel {
   padding: 0 var(--file-margins, 32px);
 }
 .folder-explorer-note-metadata {

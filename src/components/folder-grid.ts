@@ -10,12 +10,21 @@ export function renderFolderGrid(
   getItemCount: (path: string) => number,
   getAppearance: (path: string) => ItemAppearance | undefined,
   onContextMenu: (entry: VaultEntry, event: MouseEvent) => void,
+  isSortDescending: boolean,
+  onToggleSort: () => void,
 ): void {
   const section = container.createEl('section', {
     cls: 'folder-explorer__folders',
     attr: { 'aria-label': 'Subfolders' },
   });
-  renderSectionHeader(section, 'folder', 'Pastas', folders.length);
+  renderSectionHeader(
+    section,
+    'folder',
+    'Pastas',
+    folders.length,
+    isSortDescending,
+    onToggleSort,
+  );
   if (!folders.length) {
     section.createDiv({
       text: 'Nenhuma subpasta nesta pasta.',
@@ -91,6 +100,8 @@ function renderSectionHeader(
   icon: string,
   title: string,
   count: number,
+  isSortDescending: boolean,
+  onToggleSort: () => void,
 ): void {
   const header = container.createDiv({
     cls: 'folder-explorer__section-header',
@@ -98,6 +109,19 @@ function renderSectionHeader(
   createSectionIcon(header, icon);
   header.createEl('h2', { text: title });
   header.createSpan({ text: String(count), cls: 'folder-explorer__count' });
+  const actions = header.createDiv({ cls: 'folder-explorer__section-actions' });
+  const sort = actions.createEl('button', {
+    cls: 'folder-explorer__section-action folder-explorer__sort-action',
+    attr: {
+      type: 'button',
+      'aria-label': isSortDescending
+        ? 'Ordenar de A a Z'
+        : 'Ordenar de Z a A',
+      title: isSortDescending ? 'Ordenar de A a Z' : 'Ordenar de Z a A',
+    },
+  });
+  setIcon(sort, 'arrow-up-down');
+  sort.addEventListener('click', onToggleSort);
 }
 
 function formatItemCount(count: number): string {

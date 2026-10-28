@@ -110,6 +110,6 @@ function isValidDescription(description: unknown): description is string {
   return (
     typeof description === 'string' &&
     Boolean(description.trim()) &&
-    description.trim().length <= 500
+    description.trim().length <= 530
   );
 }

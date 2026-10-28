@@ -39,6 +39,7 @@ export class FolderExplorerView extends ItemView {
   private currentPath = '';
   private searchQuery = '';
   private isSearchOpen = false;
+  private isSortDescending = false;
   private readonly selectedNotePaths = new Set<string>();
   private readonly navigationService: VaultNavigationService;
   private pointerAnimationFrame: number | null = null;
@@ -136,6 +137,8 @@ export class FolderExplorerView extends ItemView {
       (path) => this.navigationService.getItemCount(path),
       (path) => this.appearances.get(path),
       (entry, event) => this.showContextMenu(entry, event),
+      this.isSortDescending,
+      () => this.toggleSortOrder(),
     );
     renderImageGallery(
       page,
@@ -154,6 +157,8 @@ export class FolderExplorerView extends ItemView {
       () => this.openCreateNoteModal(),
       () => this.openCreateDrawingModal(),
       () => this.confirmDeleteSelectedNotes(),
+      this.isSortDescending,
+      () => this.toggleSortOrder(),
     );
   }
 
@@ -206,6 +211,11 @@ export class FolderExplorerView extends ItemView {
   private closeSearch(): void {
     this.isSearchOpen = false;
     this.searchQuery = '';
+    this.render();
+  }
+
+  private toggleSortOrder(): void {
+    this.isSortDescending = !this.isSortDescending;
     this.render();
   }
 
@@ -473,14 +483,30 @@ export class FolderExplorerView extends ItemView {
     images: VaultEntry[];
   }): { folders: VaultEntry[]; notes: VaultEntry[]; images: VaultEntry[] } {
     const query = this.searchQuery.trim().toLocaleLowerCase();
-    if (!query) return contents;
+    if (!query) {
+      return {
+        folders: this.sortEntries(contents.folders),
+        notes: this.sortEntries(contents.notes),
+        images: contents.images,
+      };
+    }
     const matches = (entry: VaultEntry): boolean =>
       entry.name.toLocaleLowerCase().includes(query);
     return {
-      folders: contents.folders.filter(matches),
-      notes: contents.notes.filter(matches),
+      folders: this.sortEntries(contents.folders.filter(matches)),
+      notes: this.sortEntries(contents.notes.filter(matches)),
       images: contents.images.filter(matches),
     };
+  }
+
+  private sortEntries(entries: VaultEntry[]): VaultEntry[] {
+    return [...entries].sort((first, second) => {
+      const order = first.name.localeCompare(second.name, undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+      return this.isSortDescending ? -order : order;
+    });
   }
 
   private async openNote(path: string): Promise<void> {

@@ -145,7 +145,7 @@ export class AppearanceModal extends Modal {
       value: this.description,
       placeholder: 'Adicione uma descrição para esta pasta',
       cls: 'folder-explorer-modal__input folder-explorer-modal__textarea',
-      attr: { maxlength: '500' },
+      attr: { maxlength: '530' },
     });
     input.addEventListener('input', () => {
       this.description = input.value;

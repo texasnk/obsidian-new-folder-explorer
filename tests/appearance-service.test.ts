@@ -33,11 +33,11 @@ describe('AppearanceService', () => {
     expect(service.toSettings().appearances).toEqual({});
   });
 
-  it('rejects empty and overly long descriptions', () => {
+  it('rejects empty and descriptions longer than 530 characters', () => {
     const service = new AppearanceService({
       appearances: {
         empty: { description: '   ' },
-        long: { description: 'a'.repeat(501) },
+        long: { description: 'a'.repeat(531) },
       },
     });
     expect(service.toSettings().appearances).toEqual({});

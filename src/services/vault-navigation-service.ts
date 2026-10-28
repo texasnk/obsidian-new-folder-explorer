@@ -88,6 +88,7 @@ const IMAGE_EXTENSIONS = new Set([
 
 function byName(first: VaultEntry, second: VaultEntry): number {
   return first.name.localeCompare(second.name, undefined, {
+    numeric: true,
     sensitivity: 'base',
   });
 }
